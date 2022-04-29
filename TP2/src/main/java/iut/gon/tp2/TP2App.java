@@ -98,8 +98,8 @@ public class TP2App extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				Alert alerte = new Alert(null,"Fermer", ButtonType.CLOSE);
-				alerte.setContentText("J'aime le pain");
 				alerte.setTitle("À propos");
+				alerte.setContentText("J'aime le pain");
 				alerte.show();
 			}
 
