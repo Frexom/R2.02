@@ -3,6 +3,7 @@ package iut.gon.tp2;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -54,23 +55,65 @@ public class TP2App extends Application {
 
 	/** Prépare les actions des boutons */
 	private void prepareBoutons() {
-		ajouteTout.setOnAction(this::onAjouteTout);
-		retireTout.setOnAction(this::onRetireTout);
-		// TODO actions des deux boutons centraux
+		this.ajouteTout.setOnAction(this::onAjouteTout);
+		this.retireTout.setOnAction(this::onRetireTout);
+		this.ajouteTout.setDisable(false);
+		this.retireTout.setDisable(false);
+		
+		//actions des deux boutons centraux
+		
+		versDroite.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				int index = gauche.getSelectionModel().getSelectedIndex();
+				if(index > -1) {
+					droite.getItems().add(gauche.getItems().get(index));
+					gauche.getItems().remove(index);
+					gauche.getSelectionModel().clearSelection();
+				}
+				
+			}
+			
+		});
+		
+		versGauche.addEventHandler(ActionEvent.ACTION, new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				int index = droite.getSelectionModel().getSelectedIndex();
+				if(index > -1) {
+					gauche.getItems().add(droite.getItems().get(index));
+					droite.getItems().remove(index);
+					droite.getSelectionModel().clearSelection();
+				}
+				
+			}
+			
+		});
 	}
+	
 
 	/** Ajoute tous les éléments de gauche dans la liste de droite
    Active le bouton "Retirer tout" et désactive le bouton "Ajouter tout" */
 	private void onAjouteTout(ActionEvent actionEvent) {
+		
 		droite.getItems().addAll(gauche.getItems());
 		gauche.getItems().clear();
-		//TODO active/désactive les boutons
+		
+		gauche.setDisable(true);
+		droite.setDisable(false);
 	}
 
+	
 	/** Ajoute tous les éléments de droite dans la liste de gauche
    Active le bouton "Ajouter tout" et désactive le bouton "Retirer tout" */
 	private void onRetireTout(ActionEvent actionEvent) {
-		//TODO
+		gauche.getItems().addAll(droite.getItems());
+		droite.getItems().clear();
+		
+		droite.setDisable(true);
+		gauche.setDisable(false);
 	}
 
 	/** Prépare les menus et leurs événements */
@@ -114,12 +157,16 @@ public class TP2App extends Application {
 		menus.getMenus().addAll(this.menuFichiers, this.menuAide);
 	}
 
+	
 	/**
    Remplit la liste de gauche avec des valeurs
    Active le bouton "Ajouter tout"
 	 */
 	private void prepareListe() {
 		//TODO active le bouton "Ajouter tout"
+		this.gauche.getItems().add("Patrick Starfish");
+		this.gauche.getItems().add("Jotaro Kujo");
+		this.gauche.getItems().add("Electric Man");
 	}
 
 	private void extraitIds(Scene scene) {
