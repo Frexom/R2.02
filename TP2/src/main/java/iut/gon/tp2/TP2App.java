@@ -10,10 +10,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class TP2App extends Application {
 
@@ -50,6 +52,16 @@ public class TP2App extends Application {
 	private void prepareFermeture(Stage stage) {
 		stage.setOnCloseRequest(event -> {
 			//TODO confirmer ou consommer l'événement
+			Alert alerte = new Alert(AlertType.CONFIRMATION);
+			alerte.getButtonTypes().setAll(ButtonType.NO, ButtonType.YES);
+			alerte.setTitle("Alerte!!!!?!!!! ");
+			alerte.setContentText("Voulez-vous vraiment fermer la fenêtre?");
+			if(alerte.showAndWait().get() == ButtonType.YES) {
+				Platform.exit();
+			}
+			else {
+				event.consume();
+			}
 		});
 	}
 
@@ -68,8 +80,7 @@ public class TP2App extends Application {
 			public void handle(ActionEvent event) {
 				int index = gauche.getSelectionModel().getSelectedIndex();
 				if(index > -1) {
-					droite.getItems().add(gauche.getItems().get(index));
-					gauche.getItems().remove(index);
+					droite.getItems().add(gauche.getItems().remove(index));
 					gauche.getSelectionModel().clearSelection();
 				}
 				
@@ -83,8 +94,7 @@ public class TP2App extends Application {
 			public void handle(ActionEvent event) {
 				int index = droite.getSelectionModel().getSelectedIndex();
 				if(index > -1) {
-					gauche.getItems().add(droite.getItems().get(index));
-					droite.getItems().remove(index);
+					gauche.getItems().add(droite.getItems().remove(index));
 					droite.getSelectionModel().clearSelection();
 				}
 				
