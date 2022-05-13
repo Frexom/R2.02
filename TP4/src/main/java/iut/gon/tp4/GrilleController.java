@@ -22,9 +22,11 @@ public class GrilleController implements Initializable {
 
   private GrilleModel modele;
   private Scores table;
+  private Scores scores;
 
-  public GrilleController() {
+  public GrilleController(Scores s) {
     this.modele =  new GrilleModel();
+    this.scores = scores;
   }
 
   private @FXML GridPane grille;
@@ -80,7 +82,11 @@ public class GrilleController implements Initializable {
   }
   @FXML
   public void onMenuTable(ActionEvent evt) {
-    //TODO appeler la table des scores
+	  FXMLLoader fxmlLoader = new FXMLLoader(Morpion.class.getResource("table.fxml"));
+	  TableController tableC = fxmlLoader.getController();
+	  tableC.setScores(this.scores);
+	  
+	  //this.grille.getScene().setRoot();
   }
 
   @FXML
