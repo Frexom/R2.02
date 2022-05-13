@@ -24,10 +24,13 @@ public class GrilleController implements Initializable {
 
 	private GrilleModel modele;
 	private Scores scores;
+	private MenusController menus;
 
 	public GrilleController(Scores s) {
 		this.modele =  new GrilleModel();
+		this.menus = new MenusController();
 		this.scores = s;
+		
 	}
 
 	private @FXML GridPane grille;
@@ -53,6 +56,7 @@ public class GrilleController implements Initializable {
 				label.setFont(Font.font(24));
 			}
 		joueur.textProperty().bind(modele.texteJoueur);
+		this.menus.setParams(this.modele, this.scores);
 	}
 
 	public void joueCase(int lg, int col) {
