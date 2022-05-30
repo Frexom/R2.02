@@ -1,20 +1,27 @@
 package fr.iutgon.tp7;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import fr.iutgon.tp7.modele.FabriqueProduits;
 import fr.iutgon.tp7.modele.Ligne;
 import fr.iutgon.tp7.modele.Produit;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
+import javafx.util.converter.IntegerStringConverter;
 
 public class FactureController implements Initializable {
 	public TableView<Ligne> table;
@@ -35,8 +42,31 @@ public class FactureController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		qte.setCellValueFactory(new PropertyValueFactory<>("qte"));
-		totalHT.setCellValueFactory(new PropertyValueFactory<>("TotalHT"));
-		totalTTC.setCellValueFactory(new PropertyValueFactory<>("TotalTTC"));
+		qte.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+		produit.setCellFactory(ChoiceBoxTableCell.forTableColumn(new StringConverter<Produit>() {
+
+			@Override
+			public String toString(Produit p) {
+				return p.getNom();
+			}
+
+			@Override
+			public Produit fromString(String string) {
+				for(Produit p : FabriqueProduits.getProduits()) {
+					if(string.contentEquals(p.getNom())) {
+						return p;
+					}
+				}
+				return null;
+			}
+			
+		}, FXCollections.observableArrayList(FabriqueProduits.getProduits())));
+		
+		
+		
+		//totalHT.setCellValueFactory(new PropertyValueFactory<>("TotalHT"));
+		totalHT.setCellValueFactory(param->param.getValue().totalHTProperty());
+		totalTTC.setCellValueFactory(param->param.getValue().totalTTCProperty());
 		
 		Callback<TableColumn.CellDataFeatures<Ligne, Produit>, ObservableValue<Produit>> callbackProduit = new Callback<TableColumn.CellDataFeatures<Ligne, Produit>, ObservableValue<Produit>>(){
 
@@ -62,8 +92,8 @@ public class FactureController implements Initializable {
 
 	public void onAjouter(ActionEvent actionEvent) {
 		Random rand = new Random();
-		Produit p = new Produit("Table Ikea", rand.nextInt()%1000, rand.nextFloat()%2);
-		Ligne l = new Ligne(rand.nextInt(50), p);
+		List<Produit> listeProduits = FabriqueProduits.getProduits();
+		Ligne l = new Ligne(rand.nextInt(50), listeProduits.get(rand.nextInt(listeProduits.size()-1)));
 
 		this.table.getItems().add(l);
 	}

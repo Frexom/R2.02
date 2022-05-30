@@ -18,12 +18,12 @@ public class Ligne {
   public Ligne(int qte, Produit produit) {
     this.qte = new SimpleIntegerProperty();
     this.qte.set(qte);
-    
     this.produit = new SimpleObjectProperty<Produit>();
     this.setProduit(produit);
     
     this.totalHT = Bindings.multiply(this.qte, this.produit.get().prixProperty());
     this.totalTTC = Bindings.multiply(this.produit.get().getTva(), this.totalHT);
+    this.totalHT.addListener((obs,ov,nv)->System.out.println(nv));
     
   }
 
